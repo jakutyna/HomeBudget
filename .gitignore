@@ -1,0 +1,15 @@
+# Django #
+*.log
+*.pot
+*.pyc
+__pycache__
+db.sqlite3
+media
+secret_key.txt
+local_settings.py
+
+# PyCharm #
+.idea
+
+# Other #
+Plan.md
