@@ -1,6 +1,6 @@
 ## HomeBudget
 
-__HomeBudget__ is a simple web application that allows it's users to manage their home budget.
+__HomeBudget__ is a simple web application for home budget management.
 
 ### Requirements
 
