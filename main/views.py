@@ -1,19 +1,24 @@
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.views import LoginView, LogoutView
 from django.shortcuts import render
 from django.views import View
 
 
 class HomeView(View):
     def get(self, request, *args, **kwargs):
-        pass
+        return render(request, 'main/home.html')
 
-class LoginView(View):
+
+class LoginUserView(View):
     def get(self, request, *args, **kwargs):
         pass
 
-class LogoutView(View):
+
+class LogoutUserView(View):
     def get(self, request, *args, **kwargs):
         pass
 
-class RegisterView(View):
+
+class RegisterUserView(View):
     def get(self, request, *args, **kwargs):
         pass
