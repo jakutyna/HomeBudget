@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+    <h1>Log In</h1>
+    <p class="lead">To your HomeBudget</p>
+
+    <form method="post">
+        {% csrf_token %}
+        {% for error in form.non_field_errors %}
+            <div class="alert alert-danger ml-5">
+                <strong>{{ error|escape }}</strong>
+            </div>
+        {% endfor %}
+        <p>{{ form.username.label }}: {{ form.username}}</p>
+        <p>{{ form.password.label }}: {{ form.password}}</p>
+    <input class="btn btn-success my-2 my-sm-0" type="submit" value="Log In">
+    </form>
+
+
+{% endblock %}

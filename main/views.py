@@ -1,7 +1,8 @@
-from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.views import LoginView, LogoutView
 from django.shortcuts import render
 from django.views import View
+
+from .forms import CustomAuthenticationForm
 
 
 class HomeView(View):
@@ -9,14 +10,14 @@ class HomeView(View):
         return render(request, 'main/home.html')
 
 
-class LoginUserView(View):
-    def get(self, request, *args, **kwargs):
-        pass
+class LoginUserView(LoginView):
+    authentication_form = CustomAuthenticationForm
+    redirect_authenticated_user = True
+    template_name = 'main/login.html'
 
 
-class LogoutUserView(View):
-    def get(self, request, *args, **kwargs):
-        pass
+class LogoutUserView(LogoutView):
+    pass
 
 
 class RegisterUserView(View):
