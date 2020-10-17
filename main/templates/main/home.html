@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+    <h1>HomeBudget</h1>
+    <p class="lead">
+        {% if user.is_authenticated %}
+            Welcome {{ user.username }}!
+        {% endif %}
+        Manage your HomeBudget today.
+    </p>
+
+    {% if user.is_authenticated %}
+        <a class="btn btn-success my-2 mr-4 my-sm-0" href="">Go to MyBudget</a>
+    {% else %}
+        <div class="row d-flex justify-content-center">
+            <div class="btn-toolbar">
+                <a class="btn btn-outline-success my-2 mr-4 my-sm-0" href="{% url 'login' %}">Log In</a>
+                <a class="btn btn-outline-info my-2 ml-4 my-sm-0" href="">Register</a>
+            </div>
+        </div>
+    {% endif %}
+
+{% endblock %}
