@@ -6,6 +6,7 @@ from .forms import CustomAuthenticationForm
 
 
 class HomeView(View):
+    """View with project homepage"""
     def get(self, request, *args, **kwargs):
         return render(request, 'main/home.html')
 
@@ -21,5 +22,9 @@ class LogoutUserView(LogoutView):
 
 
 class RegisterUserView(View):
-    def get(self, request, *args, **kwargs):
-        pass
+    pass
+
+
+class UserView(View):
+    """View with user profile. Enables user to manage account settings."""
+    pass
