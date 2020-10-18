@@ -33,8 +33,8 @@ class Month(models.Model):
 
     month_name = models.IntegerField(choices=MONTH_NAME_CHOICES)
     year = models.IntegerField()
-    month_beginning_date = models.DateTimeField()
-    month_end_date = models.DateTimeField()
+    month_beginning_date = models.DateField()
+    month_end_date = models.DateField()
     slug = models.SlugField(max_length=64)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
@@ -55,7 +55,8 @@ class MonthBudget(models.Model):
         return "{} {}".format(self.month.name, 'budget')
 
     def __str__(self):
-        return  self.name
+        return self.name
+
 
 class Category(models.Model):
     name = models.CharField(max_length=128)
@@ -69,6 +70,7 @@ class Category(models.Model):
 
     class Meta:
         verbose_name_plural = "Categories"
+
 
 class MonthCategory(models.Model):
     category_budget = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
@@ -84,6 +86,7 @@ class MonthCategory(models.Model):
 
     class Meta:
         verbose_name_plural = "Month categories"
+
 
 class Expense(models.Model):
     name = models.CharField(max_length=128)
