@@ -6,5 +6,71 @@
 {% endblock %}
 
 {% block content %}
-    <h1>Widok miesiąca</h1>
+    <h1>{{ month.name }}</h1>
+
+    <div class="row mt-3">
+        <div class="col text-left">
+            <h2>Budget: {{ month_budget }}</h2>
+            <a class="btn btn-success" href="">Add monthly Budget</a>
+        </div>
+    </div>
+
+    <div class="row mt-4 border-top">
+
+        <div class="col text-left">
+
+            {% for month_category in month_categories %}
+
+
+
+{#            <div class="row mt-2">#}
+{#                <div class="col border-bottom">#}
+{#                    <h3>Category 1 - budget: 1200</h3>#}
+{#                    <ul>#}
+{#                        <li>Expense 1: 100</li>#}
+{#                        <li>Expense 1: 100</li>#}
+{#                        <li>Expense 1: 100</li>#}
+{#                        <li>Expense 1: 100</li>#}
+{#                        <li>Expense 1: 100</li>#}
+{#                        <li>Expense 1: 100</li>#}
+{#                    </ul>#}
+{#                    <h5>Category expenses: 200</h5>#}
+{#                </div>#}
+{#                <div class="col-2"></div>#}
+{#                <div class="col-6">#}
+{#                    <a class="btn btn-warning mt-2" href="">Add expense</a>#}
+{#                </div>#}
+{#            </div>#}
+            {% endfor %}
+{#            <div class="row mt-2">#}
+{#                <div class="col border-bottom">#}
+{#                    <h3>Category 2 - budget: 1200</h3>#}
+{#                    <ul>#}
+{#                        <li>Expense 1: 100</li>#}
+{#                        <li>Expense 1: 100</li>#}
+{#                    </ul>#}
+{#                    <h5>Category expenses: 200</h5><br>#}
+{#                </div>#}
+{#                <div class="col-2"></div>#}
+{#                <div class="col-6">#}
+{#                    <a class="btn btn-warning mt-2" href="">Add expense</a>#}
+{#                </div>#}
+{#            </div>#}
+            <div class="row mt-3">
+                <a class="btn btn-success mr-5" href="">Add existing category</a>
+                <a class="btn btn-success" href="">Add new category</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-3 border-top">
+        <div class="col-sm text-left">
+            <h2>Total expenses: 1500</h2>
+        </div>
+        <div class="col-sm text-right">
+            <h2 class="text-right">Total budget left: 200</h2>
+        </div>
+    </div>
+
+
 {% endblock %}

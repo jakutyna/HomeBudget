@@ -1,22 +1,18 @@
 {% extends "base.html" %}
 {% load static %}
 {% block title %}MyBudget{% endblock %}
-{% block style %}
-    <link rel="stylesheet" type="text/css" href="{% static 'homebudget_app/style.css' %}">
-{% endblock %}
-
 
 {% block content %}
     <div class="row">
-        <div class="col-sm left" id="left">
+        <div class="col-sm text-left">
             <h2>My monthly budgets</h2>
             {% for month in months %}
-                <a class="nav-link left" href="{% url 'homebudget_app:month' month_slug=month.slug  %}">
+                <a class="nav-link" href="{% url 'homebudget_app:month' pk=month.pk slug=month.slug  %}">
                     {{ month.name }}
                 </a>
             {% endfor %}
         </div>
-        <div class="col-sm right" id="right">
+        <div class="col-sm text-right">
             <h2>My categories</h2>
             {% for category in categories %}
                 <a class="nav-link" href="">{{ category.name }}</a>
@@ -24,12 +20,12 @@
         </div>
     </div>
     <div class="row ">
-        <div class="col-sm border-top left">
+        <div class="col-sm border-top text-left">
             <a class="btn btn-warning mt-3" href="{% url 'homebudget_app:add_month' %}">Add New Month</a>
         </div>
         <div class="col-4"></div>
-        <div class="col-sm border-top right">
-            <a class="btn btn-warning mt-3" href="">Add New Category</a>
+        <div class="col-sm border-top text-right">
+            <a class="btn btn-warning mt-3" href="{% url 'homebudget_app:add_category' %}">Add New Category</a>
         </div>
     </div>
 
