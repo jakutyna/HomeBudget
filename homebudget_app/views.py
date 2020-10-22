@@ -1,12 +1,12 @@
-import calendar, datetime
-
-from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Sum
 from django.shortcuts import render, get_object_or_404
+from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic.edit import CreateView
-from django.urls import reverse_lazy
 
+from .custom_generic_views import MonthCreateView, MonthUpdateView
+from .forms import MonthCategoryForm
 from .functions.functions import month_first_last_day
 from .models import Category, Expense, Month, MonthBudget, MonthCategory
 
@@ -25,7 +25,7 @@ class MyBudgetView(LoginRequiredMixin, View):
 class AddMonthView(LoginRequiredMixin, CreateView):
     model = Month
     fields = ['month_name', 'year']
-    template_name = 'homebudget_app/add_month.html'
+    template_name = 'homebudget_app/mybudget_forms.html'
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
@@ -47,8 +47,9 @@ class AddMonthView(LoginRequiredMixin, CreateView):
 class AddCategoryView(LoginRequiredMixin, CreateView):
     model = Category
     fields = ['name', 'description']
-    template_name = 'homebudget_app/add_category.html'
+    template_name = 'homebudget_app/mybudget_forms.html'
     success_url = reverse_lazy('homebudget_app:mybudget')
+
     # TODO: add CategoryView and update success_url
 
     def form_valid(self, form):
@@ -62,15 +63,73 @@ class AddCategoryView(LoginRequiredMixin, CreateView):
 class MonthView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         month = get_object_or_404(Month, pk=kwargs['pk'], slug=kwargs['slug'], user=request.user)
-        month_budget = hasattr(month,'monthbudget')
-        # try:
-        #     month_budget = month.monthbudget
-        # except ObjectDoesNotExist:
-        #     month_budget = None
+        month_budget = month.monthbudget if hasattr(month, 'monthbudget') else None
         month_categories = month.monthcategory_set.all()
+
+        category_expenses_list_with_none_values = [
+            month_category.expense_set.all().aggregate(Sum('expense_amount'))['expense_amount__sum'] for
+            month_category in month_categories
+        ]
+
+        category_expenses_list = [0 if val is None else val for val in category_expenses_list_with_none_values]
+
+        total_expenses = 0
+
+        for month_category in month_categories:
+            expenses_sum = month_category.expense_set.all().aggregate(Sum('expense_amount'))['expense_amount__sum']
+            if expenses_sum is None:
+                expenses_sum = 0
+            month_category.category_expenses = expenses_sum
+            month_category.category_budget_left = (None if month_category.category_budget is None else
+                                                   month_category.category_budget - expenses_sum)
+            total_expenses += expenses_sum
+
+        total_difference = None if month_budget is None else month_budget.budget - total_expenses
+        total_sum_and_diff = (total_expenses, total_difference)
+
         ctx = {
             'month': month,
-            'month_budget': str(month_budget),
+            'month_budget': month_budget,
             'month_categories': month_categories,
+            'category_expenses_list': category_expenses_list,
+            'total_sum_and_diff': total_sum_and_diff,
         }
         return render(request, 'homebudget_app/month.html', ctx)
+
+
+class AddMonthBudgetView(LoginRequiredMixin, MonthCreateView):
+    model = MonthBudget
+    fields = ['budget']
+
+
+class UpdateMonthBudgetView(LoginRequiredMixin, MonthUpdateView):
+    model = MonthBudget
+    fields = ['budget']
+
+    def get_object(self):
+        month = get_object_or_404(Month, pk=self.kwargs.get(self.pk_url_kwarg),
+                                  slug=self.kwargs.get(self.slug_url_kwarg),
+                                  user=self.request.user)
+        return self.model.objects.get(pk=month.monthbudget.pk)
+
+
+class AddMonthCategoryView(LoginRequiredMixin, MonthCreateView):
+    form_class = MonthCategoryForm
+
+    def get_form_kwargs(self):
+        form_kwargs = super(AddMonthCategoryView, self).get_form_kwargs()
+        form_kwargs["user"] = self.request.user
+        return form_kwargs
+
+
+class AddExpenseView(LoginRequiredMixin, MonthCreateView):
+    model = Expense
+    fields = ['name', 'expense_amount', 'description']
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        month = get_object_or_404(Month, pk=self.kwargs['pk'], slug=self.kwargs['slug'],
+                                  user=self.request.user)
+        self.object.month_category = get_object_or_404(MonthCategory, pk=self.kwargs['mc_pk'], month=month)
+        self.object.save()
+        return super().form_valid(form)

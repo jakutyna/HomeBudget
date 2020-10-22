@@ -10,67 +10,79 @@
 
     <div class="row mt-3">
         <div class="col text-left">
-            <h2>Budget: {{ month_budget }}</h2>
-            <a class="btn btn-success" href="">Add monthly Budget</a>
+            {% if month_budget %}
+                <h2>Budget: {{ month_budget.budget }}</h2>
+                <a class="btn btn-success" href="
+                    {% url 'homebudget_app:update_month_budget' pk=month.pk slug=month.slug %}">
+                    Edit Budget
+                </a>
+            {% else %}
+                <a class="btn btn-success" href="{% url 'homebudget_app:add_month_budget' pk=month.pk slug=month.slug %}">
+                    Add monthly Budget
+                </a>
+            {% endif %}
         </div>
     </div>
 
     <div class="row mt-4 border-top">
-
         <div class="col text-left">
-
             {% for month_category in month_categories %}
-
-
-
-{#            <div class="row mt-2">#}
-{#                <div class="col border-bottom">#}
-{#                    <h3>Category 1 - budget: 1200</h3>#}
-{#                    <ul>#}
-{#                        <li>Expense 1: 100</li>#}
-{#                        <li>Expense 1: 100</li>#}
-{#                        <li>Expense 1: 100</li>#}
-{#                        <li>Expense 1: 100</li>#}
-{#                        <li>Expense 1: 100</li>#}
-{#                        <li>Expense 1: 100</li>#}
-{#                    </ul>#}
-{#                    <h5>Category expenses: 200</h5>#}
-{#                </div>#}
-{#                <div class="col-2"></div>#}
-{#                <div class="col-6">#}
-{#                    <a class="btn btn-warning mt-2" href="">Add expense</a>#}
-{#                </div>#}
-{#            </div>#}
+            <div class="row mt-2 align-items-end">
+                <div class="col">
+                    <h3>{{ month_category.category }}
+                        {% if month_category.category_budget %}
+                            - budget: {{ month_category.category_budget }}
+                        {% endif %}
+                    </h3>
+                    <ul>
+                        {% for expense in month_category.expense_set.all %}
+                            <li>{{ expense.name }}: {{ expense.expense_amount }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="col-2"></div>
+                <div class="col-6">
+                        <a class="btn btn-warning mb-3 mt-2" href="
+                        {% url 'homebudget_app:add_expense' pk=month.pk slug=month.slug mc_pk=month_category.pk %}">
+                            Add expense</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col border-bottom">
+                        <h5>Category expenses: {{ month_category.category_expenses }}</h5>
+                </div>
+                <div class="col-2"></div>
+                <div class="col-6 border-bottom">
+                    {% if month_category.category_budget %}
+                            <h5>Category budget left: {{ month_category.category_budget_left }}</h5>
+                    {% endif %}
+                </div>
+            </div>
             {% endfor %}
-{#            <div class="row mt-2">#}
-{#                <div class="col border-bottom">#}
-{#                    <h3>Category 2 - budget: 1200</h3>#}
-{#                    <ul>#}
-{#                        <li>Expense 1: 100</li>#}
-{#                        <li>Expense 1: 100</li>#}
-{#                    </ul>#}
-{#                    <h5>Category expenses: 200</h5><br>#}
-{#                </div>#}
-{#                <div class="col-2"></div>#}
-{#                <div class="col-6">#}
-{#                    <a class="btn btn-warning mt-2" href="">Add expense</a>#}
-{#                </div>#}
-{#            </div>#}
+
             <div class="row mt-3">
-                <a class="btn btn-success mr-5" href="">Add existing category</a>
-                <a class="btn btn-success" href="">Add new category</a>
+                <div class="col">
+                    <a class="btn btn-success mr-5" href="
+                    {% url 'homebudget_app:add_month_category' pk=month.pk slug=month.slug %}">
+                        Add existing category
+                    </a>
+                    <a class="btn btn-success" href="">Add new category</a>
+                </div>
             </div>
         </div>
     </div>
 
+    {% if month_categories %}
     <div class="row mt-3 border-top">
         <div class="col-sm text-left">
-            <h2>Total expenses: 1500</h2>
+            <h2>Total expenses: {{ total_sum_and_diff.0 }}</h2>
         </div>
         <div class="col-sm text-right">
-            <h2 class="text-right">Total budget left: 200</h2>
+            {% if month_budget %}
+                <h2 class="text-right">Total budget left: {{ total_sum_and_diff.1 }}</h2>
+            {% endif %}
         </div>
     </div>
-
+    {% endif %}
 
 {% endblock %}
