@@ -28,7 +28,7 @@ with open(BASE_DIR / 'etc/secret_key.txt') as f:
 DEBUG = True
 
 ALLOWED_HOSTS = []
-# ALLOWED_HOSTS = ['.localhost', '127.0.0.1', '[::1]']
+# ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]', 'testserver']
 
 # Application definition
 
@@ -123,3 +123,5 @@ LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'home'
 
 LOGOUT_REDIRECT_URL = 'home'
+
+# AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend']
