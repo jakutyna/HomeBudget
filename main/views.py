@@ -22,9 +22,9 @@ class LogoutUserView(LogoutView):
 
 
 class RegisterUserView(View):
-    pass
+    pass # TODO
 
 
 class UserView(View):
     """View with user profile. Enables user to manage account settings."""
-    pass
+    pass # TODO

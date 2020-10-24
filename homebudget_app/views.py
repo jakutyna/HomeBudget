@@ -91,7 +91,6 @@ class MonthView(LoginRequiredMixin, View):
             'month': month,
             'month_budget': month_budget,
             'month_categories': month_categories,
-            'category_expenses_list': category_expenses_list,
             'total_sum_and_diff': total_sum_and_diff,
         }
         return render(request, 'homebudget_app/month.html', ctx)
